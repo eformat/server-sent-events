@@ -1,5 +1,7 @@
 == Server Sent Events
 
+HTML5 Server Sent Events
+
 ----
 cat <<EOF > index.html
 <!DOCTYPE html>
@@ -59,4 +61,14 @@ EOF
 
 npm i express patternfly --save
 npm init -f
+----
+
+OpenShift
+
+----
+oc new-project sse-events
+oc new-build --binary --name=sse -i nodejs
+oc start-build sse --from-dir=. --follow
+oc new-app sse
+oc expose svc sse
 ----
