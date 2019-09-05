@@ -72,3 +72,9 @@ oc start-build sse --from-dir=. --follow
 oc new-app sse
 oc expose svc sse
 ----
+
+Curl
+
+----
+curl -Nvvv http://sse-sse-events.apps.foo.sandbox139.opentlc.com/sse-server
+----
