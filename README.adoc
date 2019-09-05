@@ -1,0 +1,62 @@
+== Server Sent Events
+
+----
+cat <<EOF > index.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/node_modules/patternfly/dist/css/patternfly.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/patternfly/dist/css/patternfly-additions.css">
+    <title>A Service</title>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Just enjoy various PatternFly components -->
+      <div class="alert alert-success">
+        <span class="pficon pficon-ok"></span>
+        <strong>Great job!</strong> Server Sent Events and Patternfly is really working out <a href="#" class="alert-link">great for us - </a><span id="message"></span>
+      </div>
+    </div>
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script>
+      var eSource;
+      if (!!window.EventSource) {
+        var eSource = new EventSource('/sse-server');
+      } else {
+        alert("You're browser DOES NOT SUPPORT EventSource needed for this page. Try a newer browser like Chrome, FireFox, Apple");
+      }
+      eSource.addEventListener('message', function(e) {
+        document.getElementById('message').innerHTML = e.data;
+      }, false);
+    </script>    
+  </body>
+</html>
+EOF
+
+cat <<EOF > server.js
+const port = 8080
+const express = require('express')
+const path = require('path')
+const app = express()
+app.use(
+  express.static(__dirname)
+);
+app.get('/sse-server', function(req, res) {
+  res.status(200).set({
+    "connection": "keep-alive",
+    "cache-control": "no-cache",
+    "content-type": "text/event-stream"
+  })
+  setInterval(() => {
+    console.log('OK')
+    res.write('data:Hello World! ' + new Date().toISOString() + '\n\n')
+  }, 3000)
+});
+app.listen(port)
+EOF
+
+npm i express patternfly --save
+npm init -f
+----

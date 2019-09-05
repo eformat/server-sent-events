@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/node_modules/patternfly/dist/css/patternfly.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/patternfly/dist/css/patternfly-additions.css">
+    <title>A Service</title>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Just enjoy various PatternFly components -->
+      <div class="alert alert-success">
+        <span class="pficon pficon-ok"></span>
+        <strong>Great job!</strong> Server Sent Events and Patternfly is really working out <a href="#" class="alert-link">great for us - </a><span id="message"></span>
+      </div>
+    </div>
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script>
+      var eSource;
+      if (!!window.EventSource) {
+        var eSource = new EventSource('/sse-server');
+      } else {
+        alert("You're browser DOES NOT SUPPORT EventSource needed for this page. Try a newer browser like Chrome, FireFox, Apple");
+      }
+      eSource.addEventListener('message', function(e) {
+        document.getElementById('message').innerHTML = e.data;
+      }, false);
+    </script>    
+  </body>
+</html>
